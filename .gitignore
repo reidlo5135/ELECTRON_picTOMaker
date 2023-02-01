@@ -121,3 +121,6 @@ dist
 
 # Security Lock
 package-lock.json
+
+# server
+server/src/config/DBConfig.ts
