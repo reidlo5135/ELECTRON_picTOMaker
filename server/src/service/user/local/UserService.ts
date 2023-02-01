@@ -1,0 +1,7 @@
+function generateToken() {
+
+}
+
+export = {
+    generateToken
+}

@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {useCookies} from "react-cookie";
 import {useHistory} from "react-router";
 import {Link} from "react-router-dom";
+import {post} from "../../service/AxiosService";
 import Top from "../../component/Top";
 import Modal from "../../component/Modal";
 import './main.css';
@@ -40,6 +41,34 @@ export default function Main() {
         setPassword(event.target.value);
     }
 
+    const localLogin = (e:any) => {
+        e.preventDefault();
+        if(email === ""){
+            alert('아이디를 입력해주세요.');
+        } else if(password === "") {
+            alert('비밀번호를 입력해주세요.');
+        }else if(email === "" && password === "") {
+            alert('아이디와 비밀번호를 입력해주세요.');
+        } else {
+            post('/v1/api/user/login', {
+                email,
+                password
+            }, {}).then((response:any) => {
+                if(response.data.code === 0){
+                    setIsLogged(true);
+                    setCookie("accessToken", response.data.data.accessToken, {path: "/"});
+                    localStorage.setItem("refresh_token", response.data.data.refreshToken);
+                    localStorage.setItem("provider", "LOCAL");
+                    closeModal();
+                    history.push('/');
+                }
+            }).catch((err:any) => {
+                console.error('err : ', err);
+                alert(err.response.data.msg);
+            });
+        }
+    }
+
     return (
         <React.Fragment>
             <Top/>
@@ -70,7 +99,7 @@ export default function Main() {
                                                 <input type={'email'} className='form-input' onChange={emailInputCheck} placeholder="이메일"/>
                                                 <input type={'password'} className='form-input' onChange={pwInputCheck} placeholder="비밀번호"/>
                                             </div>
-                                            <button className='SI-Button'>
+                                            <button className='SI-Button' onClick={localLogin}>
                                                 로그인
                                             </button>
                                         </form>
