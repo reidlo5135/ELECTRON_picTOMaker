@@ -13,7 +13,7 @@ export async function generateToken(params:any): Promise<any> {
             console.log("UserService generateToken user find : ", result);
             resolve(result);
         }).catch((e:DatabaseError) => {
-            console.error(`UserService login error : ${e}`);
+            console.error(`UserService generateToken error : ${e}`);
             reject(e);
         })
     });
